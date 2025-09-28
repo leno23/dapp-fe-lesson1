@@ -146,7 +146,7 @@ export default function EthersTokenContract() {
               </div>
               <div>
                 <p className="text-sm text-gray-600">总供应量:</p>
-                <p className="font-semibold">{tokenInfo.totalSupply}</p>
+                <p className="font-semibold break-words">{tokenInfo.totalSupply}</p>
               </div>
             </div>
             

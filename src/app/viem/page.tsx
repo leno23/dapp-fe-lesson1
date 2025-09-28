@@ -4,6 +4,8 @@ import ViemBalanceChecker from '../components/viem/BalanceChecker';
 import ViemTransactionSender from '../components/viem/TransactionSender';
 import ViemTokenContract from '../components/viem/TokenContract';
 import ViemEventListener from '../components/viem/EventListener';
+import ViemTokenDeposit from '../components/viem/TokenDeposit';
+import ViemTokenTransfer from '../components/viem/TokenTransfer';
 
 export default function ViemPage() {
   return (
@@ -17,10 +19,12 @@ export default function ViemPage() {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           <ViemBalanceChecker />
           <ViemTransactionSender />
           <ViemTokenContract />
+          <ViemTokenDeposit />
+          <ViemTokenTransfer />
           <ViemEventListener />
         </div>
       </div>

@@ -1,7 +1,3 @@
-// 常量定义
-export const DEMO_ADDRESS = "0xf0aC9747345c23B6ba451d9103F8C2785800998D"; // 示例地址
-export const DEMO_PRIVATE_KEY = "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef" // 请使用测试私钥
-
 // ERC20 代币合约地址 (Sepolia 测试网)
 export const SEPOLIA_ERC20_CONTRACTS = {
   // USDC on Sepolia (官方测试代币)
@@ -58,11 +54,11 @@ export const NETWORKS = {
   SEPOLIA: {
     chainId: 11155111,
     name: "Sepolia",
-    rpcUrl: "https://rpc.sepolia.org"
+    rpcUrl: "https://eth-sepolia.g.alchemy.com/v2/mXqbqtme85tkvSUbAWZYV"
   },
   MAINNET: {
     chainId: 1,
     name: "Ethereum Mainnet",
-    rpcUrl: "https://cloudflare-eth.com"
+    rpcUrl: "https://eth-mainnet.g.alchemy.com/v2/mXqbqtme85tkvSUbAWZYV"
   }
 };

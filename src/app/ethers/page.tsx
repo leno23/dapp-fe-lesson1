@@ -4,6 +4,8 @@ import EthersBalanceChecker from '../components/ethers/BalanceChecker';
 import EthersTransactionSender from '../components/ethers/TransactionSender';
 import EthersTokenContract from '../components/ethers/TokenContract';
 import EthersEventListener from '../components/ethers/EventListener';
+import EthersTokenDeposit from '../components/ethers/TokenDeposit';
+import EthersTokenTransfer from '../components/ethers/TokenTransfer';
 
 export default function EthersPage() {
   return (
@@ -17,10 +19,12 @@ export default function EthersPage() {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           <EthersBalanceChecker />
           <EthersTransactionSender />
           <EthersTokenContract />
+          <EthersTokenDeposit />
+          <EthersTokenTransfer />
           <EthersEventListener />
         </div>
       </div>

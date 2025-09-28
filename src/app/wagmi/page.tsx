@@ -4,6 +4,8 @@ import WagmiBalanceChecker from '../components/wagmi/BalanceChecker';
 import WagmiTransactionSender from '../components/wagmi/TransactionSender';
 import WagmiTokenContract from '../components/wagmi/TokenContract';
 import WagmiEventListener from '../components/wagmi/EventListener';
+import WagmiTokenDeposit from '../components/wagmi/TokenDeposit';
+import WagmiTokenTransfer from '../components/wagmi/TokenTransfer';
 
 export default function WagmiPage() {
   return (
@@ -17,10 +19,12 @@ export default function WagmiPage() {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           <WagmiBalanceChecker />
           <WagmiTransactionSender />
           <WagmiTokenContract />
+          <WagmiTokenDeposit />
+          <WagmiTokenTransfer />
           <WagmiEventListener />
         </div>
       </div>
