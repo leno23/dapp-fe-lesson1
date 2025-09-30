@@ -54,24 +54,37 @@ export default function EthersTokenTransfer() {
   };
 
   const transferToken = async () => {
-    setLoading(true);
-    setTxHash(null);
+    if (!window.ethereum) {
+      alert('请安装 MetaMask 或其他以太坊钱包');
+      return;
+    }
 
-    const provider = new ethers.JsonRpcProvider(networkInfo.rpcUrl);
-    const wallet = new ethers.Wallet('0xee46391a7be1cb5e3e97ae095fcff049513b9269ba1da52e308e5d7e19298087', provider);
-    const contract = new ethers.Contract(
-      contracts[selectedToken],
-      ["function transfer(address to, uint256 amount) returns (bool)"],
-      wallet
-    );
+    try {
+      setLoading(true);
+      setTxHash(null);
 
-    const amountInWei = ethers.parseUnits(amount, 18);
-    const tx = await contract.transfer(toAddress, amountInWei);
-    setTxHash(tx.hash);
-    
-    await tx.wait();
-    await fetchTokenInfo();
-    setLoading(false);
+      // 使用浏览器钱包提供者
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      
+      const contract = new ethers.Contract(
+        contracts[selectedToken],
+        ["function transfer(address to, uint256 amount) returns (bool)"],
+        signer
+      );
+
+      const amountInWei = ethers.parseUnits(amount, 18);
+      const tx = await contract.transfer(toAddress, amountInWei);
+      setTxHash(tx.hash);
+      
+      await tx.wait();
+      await fetchTokenInfo();
+    } catch (error: any) {
+      console.error('转账失败:', error);
+      alert('转账失败: ' + (error.message || error));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

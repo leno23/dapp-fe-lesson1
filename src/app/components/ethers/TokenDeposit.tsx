@@ -1,81 +1,50 @@
 "use client";
-import { useState, useEffect } from 'react';
-import { useAccount, useChainId } from 'wagmi';
-import { ethers } from 'ethers';
-import { getContractsByChainId } from '../../../utils/constants';
-import { getNetworkInfo } from '@/utils/constants';
+import { useWalletDetection, useTokenDeposit } from '@hooks';
 
 export default function EthersTokenDeposit() {
-  const chainId = useChainId();
-  const { address } = useAccount();
-  const [selectedToken, setSelectedToken] = useState('');
-  const [amount, setAmount] = useState('');
-  const [txHash, setTxHash] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [contracts, setContracts] = useState<Record<string, string>>({});
-  const [tokenBalance, setTokenBalance] = useState<string>('0');
-  const [tokenSymbol, setTokenSymbol] = useState<string>('');
-
-  useEffect(() => {
-    const contractList = getContractsByChainId(chainId);
-    setContracts(contractList);
-    if (Object.keys(contractList).length > 0) {
-      setSelectedToken(Object.keys(contractList)[0]);
-    }
-  }, [chainId]);
-
-  useEffect(() => {
-    if (selectedToken && address && contracts[selectedToken]) {
-      fetchTokenInfo();
-    }
-  }, [selectedToken, address, contracts]);
-  const networkInfo = getNetworkInfo(chainId);
-
-  const fetchTokenInfo = async () => {
-    const provider = new ethers.JsonRpcProvider(networkInfo.rpcUrl);
-    const contract = new ethers.Contract(
-      contracts[selectedToken],
-      [
-        "function balanceOf(address) view returns (uint256)",
-        "function symbol() view returns (string)",
-        "function deposit() payable"
-      ],
-      provider
-    );
-
-    const [balance, symbol] = await Promise.allSettled([
-      contract.balanceOf(address),
-      contract.symbol()
-    ]);
-
-    setTokenBalance(ethers.formatUnits(balance.status === 'fulfilled' ? balance.value : 0, 18));
-    setTokenSymbol(symbol.status === 'fulfilled' ? symbol.value : '');
-  };
-
-  const depositToken = async () => {
-    setLoading(true);
-    setTxHash(null);
-
-    const provider = new ethers.JsonRpcProvider(networkInfo.rpcUrl);
-    const wallet = new ethers.Wallet('0xee46391a7be1cb5e3e97ae095fcff049513b9269ba1da52e308e5d7e19298087', provider);
-    const contract = new ethers.Contract(
-      contracts[selectedToken],
-      ["function deposit() payable"],
-      wallet
-    );
-
-    const amountInWei = ethers.parseEther(amount);
-    const tx = await contract.deposit({ value: amountInWei });
-    setTxHash(tx.hash);
-    
-    await tx.wait();
-    await fetchTokenInfo();
-    setLoading(false);
-  };
+  const { currentWallet, availableWallets } = useWalletDetection();
+  const {
+    selectedToken,
+    amount,
+    txHash,
+    loading,
+    contracts,
+    tokenBalance,
+    tokenSymbol,
+    ethBalance,
+    networkInfo,
+    setSelectedToken,
+    setAmount,
+    depositToken
+  } = useTokenDeposit();
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <h3 className="text-lg font-semibold mb-4">代币充值 (Ethers)</h3>
+      
+      {/* 钱包信息显示 */}
+      {availableWallets.length > 0 && (
+        <div className="mb-4 p-3 bg-blue-50 rounded-md">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-blue-800">
+                当前钱包: <span className="font-bold">{currentWallet}</span>
+              </p>
+              {availableWallets.length > 1 && (
+                <p className="text-xs text-blue-600 mt-1">
+                  检测到多个钱包: {availableWallets.join(', ')}
+                </p>
+              )}
+            </div>
+            <div className="text-right">
+              <div className={`inline-block w-2 h-2 rounded-full ${
+                currentWallet !== 'None' ? 'bg-green-500' : 'bg-red-500'
+              }`}></div>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">选择代币</label>
@@ -91,10 +60,18 @@ export default function EthersTokenDeposit() {
         </div>
 
         {selectedToken && tokenSymbol && (
-          <div className="p-3 bg-gray-50 rounded-md">
+          <div className="p-3 bg-gray-50 rounded-md space-y-1">
             <p className="text-sm text-gray-600">
-              余额: {parseFloat(tokenBalance).toFixed(6)} {tokenSymbol}
+              代币余额: {parseFloat(tokenBalance).toFixed(6)} {tokenSymbol}
             </p>
+            <p className="text-sm text-blue-600 font-medium">
+              ETH 余额: {parseFloat(ethBalance).toFixed(6)} ETH
+            </p>
+            {parseFloat(ethBalance) < 0.001 && (
+              <p className="text-xs text-red-500">
+                ⚠️ ETH 余额较低，可能无法支付 gas 费用
+              </p>
+            )}
           </div>
         )}
 
@@ -110,7 +87,7 @@ export default function EthersTokenDeposit() {
         </div>
 
         <button
-          onClick={depositToken}
+          onClick={() => depositToken()}
           disabled={loading}
           className="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 disabled:bg-gray-300"
         >
