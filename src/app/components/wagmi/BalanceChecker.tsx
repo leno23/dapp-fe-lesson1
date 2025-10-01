@@ -7,7 +7,11 @@ import { getNetworkInfo } from '../../../utils/constants';
 export default function WagmiBalanceChecker() {
   const chainId = useChainId();
   const [address, setAddress] = useState('');
-  const [networkInfo, setNetworkInfo] = useState<any>(null);
+  const [networkInfo, setNetworkInfo] = useState<{ 
+    chainId: number; 
+    name: string; 
+    rpcUrl: string 
+  } | null>(null);
   
   // 根据当前网络更新网络信息
   useEffect(() => {

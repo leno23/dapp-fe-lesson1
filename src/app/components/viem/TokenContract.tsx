@@ -98,7 +98,7 @@ export default function ViemTokenContract() {
 
   useEffect(() => {
     fetchTokenInfo();
-  }, [contractAddress, address, publicClient]);
+  }, [contractAddress, address, publicClient, fetchTokenInfo]);
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
