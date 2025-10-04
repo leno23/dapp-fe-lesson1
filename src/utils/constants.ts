@@ -11,6 +11,14 @@ export const MAINNET_ERC20_CONTRACTS = {
   WETH: "0x7b79995e5f793a07bc00c21412e50ecae098e7f9",
 };
 
+// MetaNodeStake 质押合约地址
+export const STAKE_CONTRACTS = {
+  // Sepolia 测试网
+  SEPOLIA: "0x992d5eff130456a7791066ee4972357fd240c582", // TODO: 部署后替换为实际地址
+  // 主网
+  MAINNET: "0x0000000000000000000000000000000000000000", // TODO: 部署后替换为实际地址
+};
+
 // 根据网络ID获取对应的合约配置
 export function getContractsByChainId(chainId: number): Record<string, string> {
   switch (chainId) {
@@ -62,3 +70,15 @@ export const NETWORKS = {
     rpcUrl: "https://eth-mainnet.g.alchemy.com/v2/mXqbqtme85tkvSUbAWZYV"
   }
 };
+
+// 根据链ID获取质押合约地址
+export function getStakeContractAddress(chainId: number): string {
+  switch (chainId) {
+    case 11155111: // Sepolia
+      return STAKE_CONTRACTS.SEPOLIA;
+    case 1: // Mainnet
+      return STAKE_CONTRACTS.MAINNET;
+    default:
+      return STAKE_CONTRACTS.SEPOLIA;
+  }
+}

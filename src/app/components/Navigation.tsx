@@ -8,6 +8,8 @@ export default function Navigation() {
   
   const navItems = [
     { href: '/', label: 'Home' },
+    { href: '/stake', label: '🚀 Stake' },
+    { href: '/demo', label: '📚 Hash Router Demo' },
     { href: '/wagmi', label: 'Wagmi' },
     { href: '/ethers', label: 'Ethers' },
     { href: '/viem', label: 'Viem' }

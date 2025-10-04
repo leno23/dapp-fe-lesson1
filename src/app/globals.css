@@ -33,18 +33,19 @@ body {
   }
   
   .bg-white {
-    background-color: #374151 !important;
+    color: #333;
+    background-color: #333 !important;
   }
   
-  .text-gray-900 {
-    color: #f9fafb !important;
+  .text-gray-900,.text-lg {
+    color: #fff !important;
   }
   
-  .text-gray-600 {
+  .text-gray-600,.text-sm {
     color: #d1d5db !important;
   }
   
-  .text-gray-500 {
+  .text-gray-500,.text-gray-700 {
     color: #9ca3af !important;
   }
   
